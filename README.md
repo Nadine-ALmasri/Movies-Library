@@ -22,3 +22,7 @@ In this project we learnt :
 * buliding routes
 * handling server errors 
 * handling the database 
+## for lab 14 
+* we learn Create GET request to the 3rd party API for endpoints.
+* Get our API key
+* learn the use of ( cros , .then , .use , sync ,async )
