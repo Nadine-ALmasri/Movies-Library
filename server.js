@@ -14,7 +14,7 @@ server.get(`/search`, searchMovie)
 
 server.get('/upComing', comingMovie)
 
-
+server.get('/discover', discoverMovie)
 
 
 function trendingMovie(req, res) {
