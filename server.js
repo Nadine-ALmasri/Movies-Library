@@ -8,6 +8,13 @@ const axios = require('axios')
 require('dotenv').config();
 server.use(cors())
 const APIKey = process.env.apikey
+server.use(express.json())
+//
+const pg = require('pg');
+const client = new pg.Client('postgresql://localhost:5432/lab15'
+)
+
+
 
 server.get('/trending', trendingMovie)
 server.get(`/search`, searchMovie)
@@ -15,6 +22,12 @@ server.get(`/search`, searchMovie)
 server.get('/upComing', comingMovie)
 
 server.get('/discover', discoverMovie)
+
+
+server.get('/addMovie', addMovieHandler)
+server.post('/addMovie',addMovieHandler)
+
+
 
 
 function trendingMovie(req, res) {
@@ -151,6 +164,42 @@ server.get('*', (req, res) => {
     res.status(404).send(error)
 
 })
+
+///////
+
+function gitMovieHandler(req,res){
+    const sql = `SELECT * FROM addMovie`;
+    client.query(sql)
+    .then(data=>{
+        res.send(data.rows);
+    })
+
+    .catch((error)=>{
+        errorHandler(error,req,res)
+    })
+}
+
+
+function addMovieHandler(req,res){
+    const addedMovie = req.body;
+    console.log(addedMovie);
+    const sql = `INSERT INTO addMovie (title, opinion)
+    VALUES ($1, $2 );`
+    const values = [addedMovie.title , addedMovie.summary]; 
+    client.query(sql,values)
+    .then(data=>{
+        res.send("The data has been added successfully");
+    })
+    .catch((error)=>{
+        errorHandler(error,req,res)
+    })}
+
+
+
+    
+
+
+/////
 function Movie(id, title, release_date, poster_path, overview) {
 
     this.id = id;
@@ -160,6 +209,28 @@ function Movie(id, title, release_date, poster_path, overview) {
     this.overview = overview;
 
 }
-server.listen(PORT, () => {
-    console.log(`Listening on ${PORT}: I'm ready`)
-})
+
+
+/////
+function errorHandler(error,req,res){
+        const err = {
+            status: 500,
+            message: error
+        }
+        res.status(500).send(err);
+    }
+
+
+
+
+
+
+
+
+
+client.connect()
+.then(()=>{
+    server.listen(PORT, () => {
+        console.log(`Listening on ${PORT}: I'm ready`)
+    })
+})      
