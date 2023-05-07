@@ -11,7 +11,7 @@ const APIKey = process.env.apikey
 server.use(express.json())
 //
 const pg = require('pg');
-const client = new pg.Client('postgresql://localhost:5432/lab15'
+const client = new pg.Client('postgresql://localhost:5432/movie'
 )
 
 
@@ -168,7 +168,7 @@ server.get('*', (req, res) => {
 ///////
 
 function gitMovieHandler(req,res){
-    const sql = `SELECT * FROM addMovie`;
+    const sql = `SELECT * FROM newMovie`;
     client.query(sql)
     .then(data=>{
         res.send(data.rows);
@@ -183,7 +183,7 @@ function gitMovieHandler(req,res){
 function addMovieHandler(req,res){
     const addedMovie = req.body;
     console.log(addedMovie);
-    const sql = `INSERT INTO addMovie (title, opinion)
+    const sql = `INSERT INTO newMovie (title, opinion)
     VALUES ($1, $2 );`
     const values = [addedMovie.title , addedMovie.summary]; 
     client.query(sql,values)
