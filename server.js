@@ -24,7 +24,7 @@ server.get('/upComing', comingMovie)
 server.get('/discover', discoverMovie)
 
 
-server.get('/addMovie', addMovieHandler)
+server.get('/addMovie', gitMovieHandler)
 server.post('/addMovie',addMovieHandler)
 
 
@@ -183,9 +183,9 @@ function gitMovieHandler(req,res){
 function addMovieHandler(req,res){
     const addedMovie = req.body;
     console.log(addedMovie);
-    const sql = `INSERT INTO newMovie (title, opinion)
-    VALUES ($1, $2 );`
-    const values = [addedMovie.title , addedMovie.summary]; 
+    const sql = `INSERT INTO newMovie (title,release_date,poster_path,overview)
+    VALUES ($1,$2,$3,$4);`
+    const values = [addedMovie.title, addedMovie.release_date , addedMovie.poster_path, addedMovie.overview]; 
     client.query(sql,values)
     .then(data=>{
         res.send("The data has been added successfully");
