@@ -22,12 +22,28 @@ server.get(`/search`, searchMovie)
 server.get('/upComing', comingMovie)
 
 server.get('/discover', discoverMovie)
-
+//server.put('/newMovie/:id',updateNewMovie)
 
 server.get('/addMovie', gitMovieHandler)
 server.post('/addMovie',addMovieHandler)
 
-
+/*function updateNewMovie(req,res){
+    // De-structuring 
+    // const id = req.params.id;
+    const {id} = req.params;
+    console.log(req.body);
+    const sql = `UPDATE newMovie
+    SET overview = $1
+    WHERE id = ${id};`
+    const {overview} = req.body;
+    const values = [overview];
+    client.query(sql,values).then((data)=>{
+        res.send(data)
+    })
+    .catch((error)=>{
+        errorHandler(error,req,res)
+    })
+}*/
 
 
 function trendingMovie(req, res) {
