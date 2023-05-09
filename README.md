@@ -32,3 +32,16 @@ Overview:
 
 set up  database and read and save data to it.
 ![WRRC](./database.jpg)
+
+---
+
+
+## SQL Commands lab16:
+
+### we started to understand INSERT, DELETE, UPDATE, and SELECT commands implementation on tables.
+- INSERT INTO statement is used to insert data into a table.
+- The UPDATE statement is used to modify the values in a table.
+- DELETE statement is used to remove an entire record from the table.
+- The SELECT statement is used to fetch data from the database.
+
+#### We continue working on our Movies-Library repository. we  learn how to update and delete an entry in our database.

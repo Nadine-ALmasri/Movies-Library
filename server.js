@@ -1,6 +1,6 @@
 const express = require('express');
 const server = express();
-const PORT = 3000;
+const PORT = 3003;
 const data = require('./Movie-data/data.json')
 let filterdData = {}
 const cors = require('cors');
@@ -23,9 +23,80 @@ server.get('/upComing', comingMovie)
 
 server.get('/discover', discoverMovie)
 
+server.put('/UPDATE/:id', updateHandler)
+server.delete('/DELETE/:id', deleteHandler)
+server.get('/getMovie/:id', specificMovie)
 
 server.get('/addMovie', gitMovieHandler)
-server.post('/addMovie',addMovieHandler)
+server.post('/addMovie', addMovieHandler)
+
+
+
+
+function specificMovie(req, res) {
+    const id = req.params.id;
+    console.log(req.params);
+    const sql = `SELECT * FROM newMovie WHERE id=${id} `;
+    client.query(sql)
+        .then(data => {
+            res.send(data.rows);
+        })
+
+        .catch((error) => {
+            errorHandler(error, req, res)
+        })
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+function deleteHandler(req,res){
+    const id = req.params.id;
+    console.log(req.params);
+    const sql = `DELETE FROM newMovie WHERE id=${id};`
+    client.query(sql)
+    .then((data)=>{
+        res.status(202).send(data)
+    })
+    .catch((error)=>{
+        errorHandler(error,req,res)
+    })
+}
+
+
+
+
+
+
+
+
+function updateHandler(req,res){
+    // De-structuring 
+    // const id = req.params.id;
+    const {id} = req.params;
+    console.log(req.body);
+    const sql = `UPDATE newMovie
+    SET overview = $1
+    WHERE id = ${id};`
+    const {overview} = req.body;
+    const values = [overview];
+    client.query(sql,values).then((data)=>{
+        res.send(data)
+    })
+    .catch((error)=>{
+        errorHandler(error,req,res)
+    })
+}
+
 
 
 
@@ -129,7 +200,7 @@ function comingMovie(req, res) {
     axios.get(url)
         .then(resulting => {
 
-            let mapComing= resulting.data.results.map(item => {
+            let mapComing = resulting.data.results.map(item => {
 
                 let comingMovie = new Movie(item.id, item.title, item.release_date, item.poster_path, item.overview);
                 console.log(comingMovie)
@@ -144,7 +215,8 @@ function comingMovie(req, res) {
         .catch((error) => {
             console.log('sorry there is an error', error)
             res.status(500).send(error);
-        })}
+        })
+}
 
 
 
@@ -167,36 +239,37 @@ server.get('*', (req, res) => {
 
 ///////
 
-function gitMovieHandler(req,res){
+function gitMovieHandler(req, res) {
     const sql = `SELECT * FROM newMovie`;
     client.query(sql)
-    .then(data=>{
-        res.send(data.rows);
-    })
+        .then(data => {
+            res.send(data.rows);
+        })
 
-    .catch((error)=>{
-        errorHandler(error,req,res)
-    })
+        .catch((error) => {
+            errorHandler(error, req, res)
+        })
 }
 
 
-function addMovieHandler(req,res){
+function addMovieHandler(req, res) {
     const addedMovie = req.body;
     console.log(addedMovie);
     const sql = `INSERT INTO newMovie (title,release_date,poster_path,overview)
     VALUES ($1,$2,$3,$4);`
-    const values = [addedMovie.title, addedMovie.release_date , addedMovie.poster_path, addedMovie.overview]; 
-    client.query(sql,values)
-    .then(data=>{
-        res.send("The data has been added successfully");
-    })
-    .catch((error)=>{
-        errorHandler(error,req,res)
-    })}
+    const values = [addedMovie.title, addedMovie.release_date, addedMovie.poster_path, addedMovie.overview];
+    client.query(sql, values)
+        .then(data => {
+            res.send("The data has been added successfully");
+        })
+        .catch((error) => {
+            errorHandler(error, req, res)
+        })
+}
 
 
 
-    
+
 
 
 /////
@@ -212,13 +285,13 @@ function Movie(id, title, release_date, poster_path, overview) {
 
 
 /////
-function errorHandler(error,req,res){
-        const err = {
-            status: 500,
-            message: error
-        }
-        res.status(500).send(err);
+function errorHandler(error, req, res) {
+    const err = {
+        status: 500,
+        message: error
     }
+    res.status(500).send(err);
+}
 
 
 
@@ -229,8 +302,8 @@ function errorHandler(error,req,res){
 
 
 client.connect()
-.then(()=>{
-    server.listen(PORT, () => {
-        console.log(`Listening on ${PORT}: I'm ready`)
-    })
-})      
+    .then(() => {
+        server.listen(PORT, () => {
+            console.log(`Listening on ${PORT}: I'm ready`)
+        })
+    })      
