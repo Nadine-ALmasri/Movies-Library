@@ -1,6 +1,6 @@
 const express = require('express');
 const server = express();
-const PORT = 3000;
+const PORT = 3003;
 const data = require('./Movie-data/data.json')
 let filterdData = {}
 const cors = require('cors');
@@ -13,7 +13,9 @@ server.use(express.json())
 const pg = require('pg');
 const client = new pg.Client('postgresql://localhost:5432/movie'
 )
-
+server.put('/UPDATE/:id', updateHandler)
+server.delete('/DELETE/:id', deleteHandler)
+server.get('/getMovie/:id', specificMovie)
 
 
 server.get('/trending', trendingMovie)
@@ -44,6 +46,97 @@ server.post('/addMovie',addMovieHandler)
         errorHandler(error,req,res)
     })
 }*/
+
+
+function specificMovie(req, res) {
+    const id = req.params.id;
+    console.log(req.params);
+    const sql = `SELECT * FROM newMovie WHERE id=${id} `;
+    client.query(sql)
+        .then(data => {
+            res.send(data.rows);
+        })
+
+        .catch((error) => {
+            errorHandler(error, req, res)
+        })
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+function deleteHandler(req,res){
+    const id = req.params.id;
+    console.log(req.params);
+    const sql = `DELETE FROM newMovie WHERE id=${id};`
+    client.query(sql)
+    .then((data)=>{
+        res.status(202).send(data)
+    })
+    .catch((error)=>{
+        errorHandler(error,req,res)
+    })
+}
+
+
+
+
+
+
+
+
+function updateHandler(req,res){
+    // De-structuring 
+    // const id = req.params.id;
+    const {id} = req.params;
+    console.log(req.body);
+    const sql = `UPDATE newMovie
+    SET overview = $1
+    WHERE id = ${id};`
+    const {overview} = req.body;
+    const values = [overview];
+    client.query(sql,values).then((data)=>{
+        res.send(data)
+    })
+    .catch((error)=>{
+        errorHandler(error,req,res)
+    })
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 function trendingMovie(req, res) {
