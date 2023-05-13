@@ -18,7 +18,7 @@ server.get('/trending', trendingMovie)
 server.get(`/search`, searchMovie)
 server.get('/', homeHandler)
 server.get('/upComing', comingMovie)
-
+server.delete('/DELETE/:id', deleteHandler)
 server.get('/discover', discoverMovie)
 server.put('/newMovie/:id',updateNewMovie)
 
