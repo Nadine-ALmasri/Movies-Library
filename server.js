@@ -1,13 +1,13 @@
 const express = require('express');
 const server = express();
-const PORT =process.env.PORT;
-const data = require('./Movie-data/data.json')
+const PORT =process.env.PORT ||3005;
+const data = require('./data.json')
 let filterdData = {}
 const cors = require('cors');
 const axios = require('axios')
 require('dotenv').config();
 server.use(cors())
-const APIKey = process.env.apikey
+const APIKey = process.env.apikey|| "26913528334206209115fe1715eee547"
 server.use(express.json())
 //
 const pg = require('pg');
@@ -20,12 +20,12 @@ server.get(`/search`, searchMovie)
 server.get('/upComing', comingMovie)
 
 server.get('/discover', discoverMovie)
-//server.put('/newMovie/:id',updateNewMovie)
+server.put('/newMovie/:id',updateNewMovie)
 
 server.get('/addMovie', gitMovieHandler)
 server.post('/addMovie',addMovieHandler)
 
-/*function updateNewMovie(req,res){
+function updateNewMovie(req,res){
     // De-structuring 
     // const id = req.params.id;
     const {id} = req.params;
@@ -41,7 +41,7 @@ server.post('/addMovie',addMovieHandler)
     .catch((error)=>{
         errorHandler(error,req,res)
     })
-}*/
+}
 
 
 function specificMovie(req, res) {
