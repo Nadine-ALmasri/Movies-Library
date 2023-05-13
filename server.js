@@ -1,6 +1,6 @@
 const express = require('express');
 const server = express();
-const PORT = 3000;
+const PORT = process.env.PORT;
 const data = require('./Movie-data/data.json')
 let filterdData = {}
 const cors = require('cors');
@@ -11,8 +11,7 @@ const APIKey = process.env.apikey
 server.use(express.json())
 //
 const pg = require('pg');
-const client = new pg.Client('postgresql://localhost:5432/movie'
-)
+const client = new pg.Client(process.env.DATABASE_URL)
 
 
 
