@@ -1,6 +1,6 @@
 const express = require('express');
 const server = express();
-const PORT = process.env.PORT;
+const PORT =process.env.PORT;
 const data = require('./Movie-data/data.json')
 let filterdData = {}
 const cors = require('cors');
@@ -14,17 +14,123 @@ const pg = require('pg');
 const client = new pg.Client(process.env.DATABASE_URL)
 
 
-
 server.get('/trending', trendingMovie)
 server.get(`/search`, searchMovie)
 
 server.get('/upComing', comingMovie)
 
 server.get('/discover', discoverMovie)
-
+//server.put('/newMovie/:id',updateNewMovie)
 
 server.get('/addMovie', gitMovieHandler)
 server.post('/addMovie',addMovieHandler)
+
+/*function updateNewMovie(req,res){
+    // De-structuring 
+    // const id = req.params.id;
+    const {id} = req.params;
+    console.log(req.body);
+    const sql = `UPDATE newMovie
+    SET overview = $1
+    WHERE id = ${id};`
+    const {overview} = req.body;
+    const values = [overview];
+    client.query(sql,values).then((data)=>{
+        res.send(data)
+    })
+    .catch((error)=>{
+        errorHandler(error,req,res)
+    })
+}*/
+
+
+function specificMovie(req, res) {
+    const id = req.params.id;
+    console.log(req.params);
+    const sql = `SELECT * FROM newMovie WHERE id=${id} `;
+    client.query(sql)
+        .then(data => {
+            res.send(data.rows);
+        })
+
+        .catch((error) => {
+            errorHandler(error, req, res)
+        })
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+function deleteHandler(req,res){
+    const id = req.params.id;
+    console.log(req.params);
+    const sql = `DELETE FROM newMovie WHERE id=${id};`
+    client.query(sql)
+    .then((data)=>{
+        res.status(202).send(data)
+    })
+    .catch((error)=>{
+        errorHandler(error,req,res)
+    })
+}
+
+
+
+
+
+
+
+
+function updateHandler(req,res){
+    // De-structuring 
+    // const id = req.params.id;
+    const {id} = req.params;
+    console.log(req.body);
+    const sql = `UPDATE newMovie
+    SET overview = $1
+    WHERE id = ${id};`
+    const {overview} = req.body;
+    const values = [overview];
+    client.query(sql,values).then((data)=>{
+        res.send(data)
+    })
+    .catch((error)=>{
+        errorHandler(error,req,res)
+    })
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
