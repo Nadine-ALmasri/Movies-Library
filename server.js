@@ -16,7 +16,7 @@ const client = new pg.Client(process.env.DATABASE_URL)
 
 server.get('/trending', trendingMovie)
 server.get(`/search`, searchMovie)
-
+server.get('/', homeHandler)
 server.get('/upComing', comingMovie)
 
 server.get('/discover', discoverMovie)
@@ -24,6 +24,20 @@ server.put('/newMovie/:id',updateNewMovie)
 
 server.get('/addMovie', gitMovieHandler)
 server.post('/addMovie',addMovieHandler)
+
+
+
+
+function homeHandler(req, res) {
+    res.status(200).send("Hello from the My Movie App")
+}
+
+
+
+
+
+
+
 
 function updateNewMovie(req,res){
     // De-structuring 
