@@ -25,7 +25,7 @@ server.put('/newMovie/:id',updateNewMovie)
 server.get('/addMovie', gitMovieHandler)
 server.post('/addMovie',addMovieHandler)
 
-
+server.get('/getMovie/:id', specificMovie)
 
 
 function homeHandler(req, res) {
@@ -33,10 +33,21 @@ function homeHandler(req, res) {
 }
 
 
+function specificMovie(req, res) {
+    const id = req.params.id;
+    console.log(req.params);
+    const sql = `SELECT * FROM newMovie WHERE id=${id} `;
+    client.query(sql)
+        .then(data => {
+            res.send(data.rows);
+        })
+
+        .catch((error) => {
+            errorHandler(error, req, res)
+        })
 
 
-
-
+    }
 
 
 function updateNewMovie(req,res){
